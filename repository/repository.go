@@ -12,27 +12,27 @@ import (
 )
 
 type Base[T any] struct {
-	store database.Queryable
-	db    database.Queryable
-	table string
+	Store database.Queryable
+	DB    database.Queryable
+	Table string
 }
 
 func (b *Base[T]) MustBegin() database.Queryable {
-	db := b.store.(*sqlx.DB)
-	b.db = db
+	db := b.Store.(*sqlx.DB)
+	b.DB = db
 	t := db.MustBegin()
-	b.store = t
+	b.Store = t
 	return t
 }
 
 func (b *Base[T]) Rollback() {
-	t := b.store.(*sqlx.Tx)
+	t := b.Store.(*sqlx.Tx)
 	t.Rollback()
 	b.Reset()
 }
 
 func (b *Base[T]) Commit() error {
-	t := b.store.(*sqlx.Tx)
+	t := b.Store.(*sqlx.Tx)
 	err := t.Commit()
 	if err != nil {
 		return err
@@ -41,12 +41,12 @@ func (b *Base[T]) Commit() error {
 }
 
 func (b *Base[T]) SetTx(t database.Queryable) {
-	b.db = b.store
-	b.store = t
+	b.DB = b.Store
+	b.Store = t
 }
 
 func (b *Base[T]) Reset(repos ...database.Transactable) {
-	b.store = b.db
+	b.Store = b.DB
 	for _, v := range repos {
 		v.Reset()
 	}
@@ -57,7 +57,7 @@ func (b Base[T]) List(limit int, offset int) (list []T, err error) {
 		limit = 20
 	}
 
-	err = b.store.Select(&list, fmt.Sprintf("SELECT * FROM %s LIMIT $1 OFFSET $2", b.table), limit, offset)
+	err = b.Store.Select(&list, fmt.Sprintf("SELECT * FROM %s LIMIT $1 OFFSET $2", b.Table), limit, offset)
 	if err == sql.ErrNoRows {
 		return list, err
 	}
@@ -65,7 +65,7 @@ func (b Base[T]) List(limit int, offset int) (list []T, err error) {
 }
 
 func (b Base[T]) GetById(ID string) (m T, err error) {
-	err = b.store.Get(&m, fmt.Sprintf("SELECT * FROM %s WHERE id = $1 AND deactivated_at IS NULL", b.table), ID)
+	err = b.Store.Get(&m, fmt.Sprintf("SELECT * FROM %s WHERE id = $1 AND deactivated_at IS NULL", b.Table), ID)
 	if err != nil && err == sql.ErrNoRows {
 		return m, err
 	}
@@ -74,7 +74,7 @@ func (b Base[T]) GetById(ID string) (m T, err error) {
 
 // Returns the first match of the user's ID
 func (b Base[T]) GetByUserId(userID string) (m T, err error) {
-	err = b.store.Get(&m, fmt.Sprintf("SELECT * FROM %s WHERE user_id = $1 AND deactivated_at IS NULL LIMIT 1", b.table), userID)
+	err = b.Store.Get(&m, fmt.Sprintf("SELECT * FROM %s WHERE user_id = $1 AND deactivated_at IS NULL LIMIT 1", b.Table), userID)
 	if err != nil && err == sql.ErrNoRows {
 		return m, err
 	}
@@ -86,7 +86,7 @@ func (b Base[T]) ListByUserId(userID string, limit int, offset int) ([]T, error)
 	if limit == 0 {
 		limit = 100
 	}
-	err := b.store.Select(&list, fmt.Sprintf("SELECT * FROM %s WHERE user_id = $1 LIMIT $2 OFFSET $3", b.table), userID, limit, offset)
+	err := b.Store.Select(&list, fmt.Sprintf("SELECT * FROM %s WHERE user_id = $1 LIMIT $2 OFFSET $3", b.Table), userID, limit, offset)
 	if err == sql.ErrNoRows {
 		return list, nil
 	}
@@ -102,8 +102,8 @@ func (b Base[T]) Update(ID string, updates any) error {
 	if len(names) == 0 {
 		return errors.New("no fields to update")
 	}
-	query := fmt.Sprintf("UPDATE %s SET %s WHERE id = '%s'", b.table, strings.Join(names, ", "), ID)
-	_, err := b.store.NamedExec(query, keyToUpdate)
+	query := fmt.Sprintf("UPDATE %s SET %s WHERE id = '%s'", b.Table, strings.Join(names, ", "), ID)
+	_, err := b.Store.NamedExec(query, keyToUpdate)
 	if err != nil {
 		return err
 	}
@@ -111,9 +111,9 @@ func (b Base[T]) Update(ID string, updates any) error {
 }
 
 func (b Base[T]) Select(model interface{}, query string, params ...interface{}) error {
-	return b.store.Select(model, query, params)
+	return b.Store.Select(model, query, params)
 }
 
 func (b Base[T]) Get(model interface{}, query string, params ...interface{}) error {
-	return b.store.Get(model, query, params)
+	return b.Store.Get(model, query, params)
 }
