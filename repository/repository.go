@@ -11,13 +11,13 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type base[T any] struct {
+type Base[T any] struct {
 	store database.Queryable
 	db    database.Queryable
 	table string
 }
 
-func (b *base[T]) MustBegin() database.Queryable {
+func (b *Base[T]) MustBegin() database.Queryable {
 	db := b.store.(*sqlx.DB)
 	b.db = db
 	t := db.MustBegin()
@@ -25,13 +25,13 @@ func (b *base[T]) MustBegin() database.Queryable {
 	return t
 }
 
-func (b *base[T]) Rollback() {
+func (b *Base[T]) Rollback() {
 	t := b.store.(*sqlx.Tx)
 	t.Rollback()
 	b.Reset()
 }
 
-func (b *base[T]) Commit() error {
+func (b *Base[T]) Commit() error {
 	t := b.store.(*sqlx.Tx)
 	err := t.Commit()
 	if err != nil {
@@ -40,19 +40,19 @@ func (b *base[T]) Commit() error {
 	return err
 }
 
-func (b *base[T]) SetTx(t database.Queryable) {
+func (b *Base[T]) SetTx(t database.Queryable) {
 	b.db = b.store
 	b.store = t
 }
 
-func (b *base[T]) Reset(repos ...database.Transactable) {
+func (b *Base[T]) Reset(repos ...database.Transactable) {
 	b.store = b.db
 	for _, v := range repos {
 		v.Reset()
 	}
 }
 
-func (b base[T]) List(limit int, offset int) (list []T, err error) {
+func (b Base[T]) List(limit int, offset int) (list []T, err error) {
 	if limit == 0 {
 		limit = 20
 	}
@@ -64,7 +64,7 @@ func (b base[T]) List(limit int, offset int) (list []T, err error) {
 	return list, err
 }
 
-func (b base[T]) GetById(ID string) (m T, err error) {
+func (b Base[T]) GetById(ID string) (m T, err error) {
 	err = b.store.Get(&m, fmt.Sprintf("SELECT * FROM %s WHERE id = $1 AND deactivated_at IS NULL", b.table), ID)
 	if err != nil && err == sql.ErrNoRows {
 		return m, err
@@ -73,7 +73,7 @@ func (b base[T]) GetById(ID string) (m T, err error) {
 }
 
 // Returns the first match of the user's ID
-func (b base[T]) GetByUserId(userID string) (m T, err error) {
+func (b Base[T]) GetByUserId(userID string) (m T, err error) {
 	err = b.store.Get(&m, fmt.Sprintf("SELECT * FROM %s WHERE user_id = $1 AND deactivated_at IS NULL LIMIT 1", b.table), userID)
 	if err != nil && err == sql.ErrNoRows {
 		return m, err
@@ -81,7 +81,7 @@ func (b base[T]) GetByUserId(userID string) (m T, err error) {
 	return m, err
 }
 
-func (b base[T]) ListByUserId(userID string, limit int, offset int) ([]T, error) {
+func (b Base[T]) ListByUserId(userID string, limit int, offset int) ([]T, error) {
 	list := []T{}
 	if limit == 0 {
 		limit = 100
@@ -97,7 +97,7 @@ func (b base[T]) ListByUserId(userID string, limit int, offset int) ([]T, error)
 	return list, nil
 }
 
-func (b base[T]) Update(ID string, updates any) error {
+func (b Base[T]) Update(ID string, updates any) error {
 	names, keyToUpdate := common.KeysAndValues(updates)
 	if len(names) == 0 {
 		return errors.New("no fields to update")
@@ -110,10 +110,10 @@ func (b base[T]) Update(ID string, updates any) error {
 	return err
 }
 
-func (b base[T]) Select(model interface{}, query string, params ...interface{}) error {
+func (b Base[T]) Select(model interface{}, query string, params ...interface{}) error {
 	return b.store.Select(model, query, params)
 }
 
-func (b base[T]) Get(model interface{}, query string, params ...interface{}) error {
+func (b Base[T]) Get(model interface{}, query string, params ...interface{}) error {
 	return b.store.Get(model, query, params)
 }
