@@ -1,6 +1,9 @@
 package common
 
-import "reflect"
+import (
+	"os"
+	"reflect"
+)
 
 // keysAndValues is only being used for optional updates
 // do not use it for insert or select
@@ -38,4 +41,8 @@ func isNil(i interface{}) bool {
 		return reflect.ValueOf(i).IsNil()
 	}
 	return false
+}
+
+func IsLocalEnv() bool {
+	return os.Getenv("ENV") == "local"
 }
