@@ -41,7 +41,7 @@ func LogStringError(c echo.Context, err error, handlerMsg string) {
 	if IsLocalEnv() {
 		st2 := fmt.Sprintf("\nSTACK TRACE:\n%+v: [%+v ]\n\n", cause.Error(), st[0:5])
 		// delete the string_api docker path from the stack trace
-		st2 = strings.ReplaceAll(st2, serviceName, "")
+		st2 = strings.ReplaceAll(st2, "/"+serviceName+"/", "")
 		fmt.Print(st2)
 		return
 	}
