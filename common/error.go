@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -32,10 +33,15 @@ func LogStringError(c echo.Context, err error, handlerMsg string) {
 	cause := errors.Cause(err)
 	st := tracer.StackTrace()
 
+	serviceName := os.Getenv("SERVICE_NAME")
+	if serviceName == "" {
+		log.Warn().Msg("service name is missing from env")
+	}
+
 	if IsLocalEnv() {
 		st2 := fmt.Sprintf("\nSTACK TRACE:\n%+v: [%+v ]\n\n", cause.Error(), st[0:5])
 		// delete the string_api docker path from the stack trace
-		st2 = strings.ReplaceAll(st2, "/string_api/", "")
+		st2 = strings.ReplaceAll(st2, serviceName, "")
 		fmt.Print(st2)
 		return
 	}
