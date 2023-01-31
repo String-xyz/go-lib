@@ -21,7 +21,9 @@ type Queryable interface {
 	PreparexContext(context.Context, string) (*sqlx.Stmt, error)
 	QueryRowContext(context.Context, string, ...interface{}) *sql.Row
 	Select(interface{}, string, ...interface{}) error
+	QueryxContext(context.Context, string, ...interface{}) (*sqlx.Rows, error)
 	QueryRow(string, ...interface{}) *sql.Row
+	QueryRowxContext(context.Context, string, ...interface{}) *sqlx.Row
 	PrepareNamedContext(context.Context, string) (*sqlx.NamedStmt, error)
 	PrepareNamed(string) (*sqlx.NamedStmt, error)
 	Preparex(string) (*sqlx.Stmt, error)
@@ -29,6 +31,7 @@ type Queryable interface {
 	NamedExecContext(context.Context, string, interface{}) (sql.Result, error)
 	MustExec(string, ...interface{}) sql.Result
 	NamedQuery(string, interface{}) (*sqlx.Rows, error)
+	Rebind(string) string
 }
 
 type Readable interface {
