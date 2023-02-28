@@ -113,14 +113,15 @@ func (b Base[T]) Update(ctx context.Context, ID string, updates any) error {
 }
 
 func (b Base[T]) Deactivate(ctx context.Context, ID string) error {
-	query := fmt.Sprintf("UPDATE %s SET deactivated_at = NULL WHERE id = :id", b.Table)
-	_, err := b.Store.NamedExecContext(ctx, query, map[string]interface{}{"id": ID})
+	now := time.Now()
+	query := fmt.Sprintf("UPDATE %s SET deactivated_at = :time WHERE id = :id", b.Table)
+	_, err := b.Store.NamedExecContext(ctx, query, map[string]interface{}{"id": ID, "time": now})
 	return err
 }
 
-func (b Base[T]) Activate(ctx context.Context, ID string, time time.Time) error {
-	query := fmt.Sprintf("UPDATE %s SET deactivated_at = :time WHERE id = :id", b.Table)
-	_, err := b.Store.NamedExecContext(ctx, query, map[string]interface{}{"time": time, "id": ID})
+func (b Base[T]) Activate(ctx context.Context, ID string) error {
+	query := fmt.Sprintf("UPDATE %s SET deactivated_at = NULL WHERE id = :id", b.Table)
+	_, err := b.Store.NamedExecContext(ctx, query, map[string]interface{}{"id": ID})
 	return err
 }
 
