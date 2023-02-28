@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/String-xyz/go-lib/common"
 	"github.com/String-xyz/go-lib/database"
@@ -108,6 +109,19 @@ func (b Base[T]) Update(ctx context.Context, ID string, updates any) error {
 	if err != nil {
 		return err
 	}
+	return err
+}
+
+func (b Base[T]) Deactivate(ctx context.Context, ID string) error {
+	now := time.Now()
+	query := fmt.Sprintf("UPDATE %s SET deactivated_at = :time WHERE id = :id", b.Table)
+	_, err := b.Store.NamedExecContext(ctx, query, map[string]interface{}{"id": ID, "time": now})
+	return err
+}
+
+func (b Base[T]) Activate(ctx context.Context, ID string) error {
+	query := fmt.Sprintf("UPDATE %s SET deactivated_at = NULL WHERE id = :id", b.Table)
+	_, err := b.Store.NamedExecContext(ctx, query, map[string]interface{}{"id": ID})
 	return err
 }
 
