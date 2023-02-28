@@ -112,7 +112,7 @@ func (b Base[T]) Update(ctx context.Context, ID string, updates any) error {
 	return err
 }
 
-func (b Base[T]) Deactive(ctx context.Context, ID string) error {
+func (b Base[T]) Deactivate(ctx context.Context, ID string) error {
 	query := fmt.Sprintf("UPDATE %s SET deactivated_at = NULL WHERE id = :id", b.Table)
 	_, err := b.Store.NamedExecContext(ctx, query, map[string]interface{}{"id": ID})
 	return err
