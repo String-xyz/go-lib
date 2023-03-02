@@ -81,12 +81,15 @@ func message(f validator.FieldError) string {
 	return fmt.Sprintf("%s %s", f.Field(), message)
 }
 
-// check for empty strings
-func IsEmpty(s ...string) bool {
-	for _, v := range s {
-		if v == "" {
-			return true
-		}
+func IsUUID(id string) bool {
+	validate := validator.New()
+
+	errs := validate.Var(id, "required,uuid")
+
+	if errs != nil {
+		fmt.Println(errs) // output: Key: "" Error:Field validation for "" failed on the "email" tag
+		return false
 	}
-	return false
+
+	return true
 }
