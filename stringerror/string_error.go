@@ -1,10 +1,11 @@
-package common
+package stringerror
 
 import (
 	"fmt"
 	"os"
 	"strings"
 
+	"github.com/String-xyz/go-lib/common"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -38,7 +39,7 @@ func LogStringError(c echo.Context, err error, handlerMsg string) {
 		log.Warn().Msg("service name is missing from env")
 	}
 
-	if IsLocalEnv() {
+	if common.IsLocalEnv() {
 		st2 := fmt.Sprintf("\nSTACK TRACE:\n%+v: [%+v ]\n\n", cause.Error(), st[0:5])
 		// delete the string_api docker path from the stack trace
 		st2 = strings.ReplaceAll(st2, "/"+serviceName+"/", "")
@@ -66,7 +67,5 @@ func StringError(err error, optionalMsg ...string) error {
 
 	return errors.Wrap(err, concat)
 }
-
-/************ New errors lib ************/
 
 var ErrNotFound = errors.New("not found")

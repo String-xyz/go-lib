@@ -1,5 +1,4 @@
-/* Temporal file until we can modify the go-lib http error */
-package handler
+package httperror
 
 import (
 	"net/http"
