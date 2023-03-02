@@ -74,3 +74,5 @@ func ErrorIs(err, target error) bool {
 
 var ERR_NOT_FOUND = errors.New("not found")
 var ERR_FORBIDDEN = errors.New("invoking member lacks authority")
+var ERR_INVALID_RESET_TOKEN = errors.New("invalid password reset token")
+var ERR_INVALID_PASSWORD = errors.New("invalid password")
