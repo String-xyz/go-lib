@@ -73,3 +73,4 @@ func ErrorIs(err, target error) bool {
 }
 
 var ERR_NOT_FOUND = errors.New("not found")
+var ERR_FORBIDDEN = errors.New("invoking member lacks authority")
