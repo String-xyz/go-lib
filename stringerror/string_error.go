@@ -68,4 +68,4 @@ func StringError(err error, optionalMsg ...string) error {
 	return errors.Wrap(err, concat)
 }
 
-var ErrNotFound = errors.New("not found")
+var ERR_NOT_FOUND = errors.New("not found")
