@@ -135,6 +135,7 @@ func (r redisStore) HSet(key string, data map[string]interface{}) error {
 	ctx := context.Background()
 	if err := r.client.HSet(ctx, key, data).Err(); err != nil {
 		return common.StringError(err, "failed to save array to redis")
+		// return common.UnexpectedError(err)
 	}
 
 	return nil
