@@ -81,14 +81,13 @@ func message(f validator.FieldError) string {
 	return fmt.Sprintf("%s %s", f.Field(), message)
 }
 
-func IsUUID(id string) bool {
+func IsUUID(id ...string) bool {
 	validate := validator.New()
 
-	errs := validate.Var(id, "required,uuid")
-
-	if errs != nil {
-		fmt.Println(errs) // output: Key: "" Error:Field validation for "" failed on the "email" tag
-		return false
+	for _, i := range id {
+		if err := validate.Var(i, "uuid"); err != nil {
+			return false
+		}
 	}
 
 	return true
