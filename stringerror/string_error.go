@@ -80,7 +80,7 @@ type SError struct {
 	NativeError error
 }
 
-func (e *SError) Error() string {
+func (e SError) Error() string {
 	return e.Code
 }
 
