@@ -84,6 +84,10 @@ func (e SError) Error() string {
 	return e.Code
 }
 
+func (e SError) UnWrap() error {
+	return e.NativeError
+}
+
 func New(code, message string) SError {
 	return SError{Code: code, Message: message, NativeError: errors.New(message)}
 }
