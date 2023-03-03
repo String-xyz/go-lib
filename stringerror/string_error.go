@@ -79,7 +79,6 @@ var INVALID_RESET_TOKEN = errors.New("invalid password reset token")
 var INVALID_PASSWORD = errors.New("invalid password")
 var ALREADY_IN_USE = errors.New("already in use")
 var DEACTIVATED = errors.New("deactivated")
-var REDIS_NOT_FOUND = errors.New("redis not found")
 
 /* Marlon's Proposal */
 
@@ -137,10 +136,4 @@ var REDIS_NOT_FOUND = errors.New("redis not found")
 // 	Code:        "deactivated",
 // 	Message:     "deactivated",
 // 	NativeError: errors.New("deactivated"),
-// }
-
-// var REDIS_NOT_FOUND = SError{
-// 	Code:        "redis_not_found",
-// 	Message:     "redis not found",
-// 	NativeError: errors.New("redis not found"),
 // }
