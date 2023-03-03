@@ -89,7 +89,7 @@ func (e SError) UnWrap() error {
 }
 
 func New(code, message string) SError {
-	return SError{Code: code, Message: message, NativeError: errors.New(message)}
+	return SError{Code: code, Message: message, NativeError: errors.New(code)}
 }
 
 var NOT_FOUND = SError{
