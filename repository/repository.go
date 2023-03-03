@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	serrors "github.com/String-xyz/go-lib/stringerror"
+
 	"github.com/String-xyz/go-lib/common"
 	"github.com/String-xyz/go-lib/database"
 	"github.com/jmoiron/sqlx"
@@ -61,7 +63,7 @@ func (b Base[T]) List(ctx context.Context, limit int, offset int) (list []T, err
 
 	err = b.Store.SelectContext(ctx, &list, fmt.Sprintf("SELECT * FROM %s LIMIT $1 OFFSET $2", b.Table), limit, offset)
 	if err == sql.ErrNoRows {
-		return list, err
+		return list, nil
 	}
 	return list, err
 }
@@ -69,7 +71,7 @@ func (b Base[T]) List(ctx context.Context, limit int, offset int) (list []T, err
 func (b Base[T]) GetById(ctx context.Context, ID string) (m T, err error) {
 	err = b.Store.GetContext(ctx, &m, fmt.Sprintf("SELECT * FROM %s WHERE id = $1 AND deactivated_at IS NULL", b.Table), ID)
 	if err != nil && err == sql.ErrNoRows {
-		return m, err
+		return m, serrors.NOT_FOUND
 	}
 	return m, err
 }
@@ -78,7 +80,7 @@ func (b Base[T]) GetById(ctx context.Context, ID string) (m T, err error) {
 func (b Base[T]) GetByUserId(ctx context.Context, userID string) (m T, err error) {
 	err = b.Store.GetContext(ctx, &m, fmt.Sprintf("SELECT * FROM %s WHERE user_id = $1 AND deactivated_at IS NULL LIMIT 1", b.Table), userID)
 	if err != nil && err == sql.ErrNoRows {
-		return m, err
+		return m, serrors.NOT_FOUND
 	}
 	return m, err
 }
