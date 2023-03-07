@@ -71,7 +71,7 @@ func (b Base[T]) List(ctx context.Context, limit int, offset int) (list []T, err
 func (b Base[T]) GetById(ctx context.Context, ID string) (m T, err error) {
 	err = b.Store.GetContext(ctx, &m, fmt.Sprintf("SELECT * FROM %s WHERE id = $1 AND deactivated_at IS NULL", b.Table), ID)
 	if err != nil && err == sql.ErrNoRows {
-		return m, serrors.NOT_FOUND
+		return m, serror.NOT_FOUND
 	}
 	return m, err
 }
