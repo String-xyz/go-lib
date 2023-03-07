@@ -122,7 +122,7 @@ func (r redisStore) Get(id string) ([]byte, error) {
 	if err != nil {
 
 		if err.Error() == REDIS_NOT_FOUND_ERROR {
-			return nil, common.StringError(serrors.NOT_FOUND)
+			return nil, common.StringError(serror.NOT_FOUND)
 		}
 
 		return nil, common.StringError(err)
