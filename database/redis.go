@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/String-xyz/go-lib/common"
+	serror "github.com/String-xyz/go-lib/stringerror"
+
 	"github.com/go-redis/redis/v8"
 )
 
@@ -118,6 +120,11 @@ func (r redisStore) Get(id string) ([]byte, error) {
 	ctx := context.Background()
 	bytes, err := r.client.Get(ctx, id).Bytes()
 	if err != nil {
+
+		if err.Error() == REDIS_NOT_FOUND_ERROR {
+			return nil, common.StringError(serror.NOT_FOUND)
+		}
+
 		return nil, common.StringError(err)
 	}
 	return bytes, nil
@@ -144,6 +151,11 @@ func (r redisStore) HGetAll(key string) (map[string]string, error) {
 	ctx := context.Background()
 	data, err := r.client.HGetAll(ctx, key).Result()
 	if err != nil {
+
+		if err.Error() == REDIS_NOT_FOUND_ERROR {
+			return nil, common.StringError(serror.NOT_FOUND)
+		}
+
 		return data, common.StringError(err)
 	}
 	return data, nil

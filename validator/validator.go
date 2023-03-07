@@ -80,3 +80,15 @@ func message(f validator.FieldError) string {
 	}
 	return fmt.Sprintf("%s %s", f.Field(), message)
 }
+
+func IsUUID(id ...string) bool {
+	validate := validator.New()
+
+	for _, i := range id {
+		if err := validate.Var(i, "uuid"); err != nil {
+			return false
+		}
+	}
+
+	return true
+}
