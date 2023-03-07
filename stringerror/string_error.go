@@ -4,8 +4,13 @@ import (
 	"github.com/pkg/errors"
 )
 
-func ErrorIs(err, target error) bool {
-	return errors.Cause(err).Error() == target.Error()
+func IsError(err error, targets ...error) bool {
+	for _, target := range targets {
+		if errors.Cause(err).Error() == target.Error() {
+			return true
+		}
+	}
+	return false
 }
 
 var NOT_FOUND = errors.New("not found")
