@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/String-xyz/go-lib/common"
-	serrors "github.com/String-xyz/go-lib/stringerror"
+	serror "github.com/String-xyz/go-lib/stringerror"
 
 	"github.com/go-redis/redis/v8"
 )
