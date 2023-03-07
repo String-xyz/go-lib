@@ -153,7 +153,7 @@ func (r redisStore) HGetAll(key string) (map[string]string, error) {
 	if err != nil {
 
 		if err.Error() == REDIS_NOT_FOUND_ERROR {
-			return nil, common.StringError(serrors.NOT_FOUND)
+			return nil, common.StringError(serror.NOT_FOUND)
 		}
 
 		return data, common.StringError(err)
