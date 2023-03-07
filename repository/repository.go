@@ -80,7 +80,7 @@ func (b Base[T]) GetById(ctx context.Context, ID string) (m T, err error) {
 func (b Base[T]) GetByUserId(ctx context.Context, userID string) (m T, err error) {
 	err = b.Store.GetContext(ctx, &m, fmt.Sprintf("SELECT * FROM %s WHERE user_id = $1 AND deactivated_at IS NULL LIMIT 1", b.Table), userID)
 	if err != nil && err == sql.ErrNoRows {
-		return m, serrors.NOT_FOUND
+		return m, serror.NOT_FOUND
 	}
 	return m, err
 }
