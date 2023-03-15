@@ -22,7 +22,7 @@ func KeysAndValues(item interface{}) ([]string, map[string]interface{}) {
 
 	for i := 0; i < v.NumField(); i++ {
 		field := reflectValue.Field(i).Interface()
-		if !isNil(field) {
+		if !IsNil(field) {
 			t := v.Field(i).Tag.Get(tag) + "=:" + v.Field(i).Tag.Get(tag)
 			keyNames = append(keyNames, t)
 			keyValues[v.Field(i).Tag.Get(tag)] = field
@@ -32,7 +32,7 @@ func KeysAndValues(item interface{}) ([]string, map[string]interface{}) {
 	return keyNames, keyValues
 }
 
-func isNil(i interface{}) bool {
+func IsNil(i interface{}) bool {
 	if i == nil {
 		return true
 	}
