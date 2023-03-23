@@ -4,7 +4,9 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"io"
 )
@@ -63,4 +65,9 @@ func DecryptString(data string, secret string) (string, error) {
 	plainText := make([]byte, len(cipherText))
 	cfb.XORKeyStream(plainText, cipherText)
 	return string(plainText), nil
+}
+
+func ToSha256(v string) string {
+	bs := sha256.Sum256([]byte(v))
+	return hex.EncodeToString(bs[:])
 }
