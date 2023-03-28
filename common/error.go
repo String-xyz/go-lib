@@ -3,6 +3,7 @@ package common
 import (
 	"fmt"
 	"os"
+	"reflect"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -58,6 +59,13 @@ func StringError(err error, optionalMsg ...string) error {
 
 	for _, msgs := range optionalMsg {
 		concat += msgs + " "
+	}
+
+	// Fix type mismatch from external libraries
+	t := reflect.TypeOf(err)
+	_, ok := t.MethodByName("Wrap")
+	if !ok {
+		err = errors.New(err.Error())
 	}
 
 	if errors.Cause(err) == nil || errors.Cause(err) == err {
