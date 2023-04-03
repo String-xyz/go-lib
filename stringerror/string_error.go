@@ -4,7 +4,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func IsError(err error, targets ...error) bool {
+func Is(err error, targets ...error) bool {
 	for _, target := range targets {
 		if errors.Cause(err).Error() == target.Error() {
 			return true
