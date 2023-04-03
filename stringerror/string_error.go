@@ -1,12 +1,14 @@
 package stringerror
 
 import (
+	"strings"
+
 	"github.com/pkg/errors"
 )
 
 func Is(err error, targets ...error) bool {
 	for _, target := range targets {
-		if errors.Cause(err).Error() == target.Error() {
+		if strings.Contains(errors.Cause(err).Error(), target.Error()) {
 			return true
 		}
 	}
