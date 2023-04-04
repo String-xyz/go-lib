@@ -7,6 +7,10 @@ import (
 )
 
 func Is(err error, targets ...error) bool {
+	if err == nil {
+		return false
+	}
+
 	for _, target := range targets {
 		if strings.Contains(errors.Cause(err).Error(), target.Error()) {
 			return true
