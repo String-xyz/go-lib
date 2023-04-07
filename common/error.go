@@ -68,7 +68,7 @@ func StringError(err error, optionalMsg ...string) error {
 		err = errors.New(err.Error())
 	}
 
-	if errors.Cause(err) == nil || errors.Cause(err) == err {
+	if errors.Cause(err) == nil {
 		return errors.Wrap(errors.New(err.Error()), concat)
 	}
 
