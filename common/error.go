@@ -40,7 +40,7 @@ func LogStringError(c echo.Context, err error, handlerMsg string) {
 	}
 
 	if IsLocalEnv() {
-		st2 := fmt.Sprintf("\nSTACK TRACE:\n%+v: [%+v ]\n\n", cause.Error(), st[0:5])
+		st2 := fmt.Sprintf("\nSTACK TRACE:\n%+v: [%+v ]\n\n", cause.Error(), st)
 		// delete the string_api docker path from the stack trace
 		st2 = strings.ReplaceAll(st2, "/"+serviceName+"/", "")
 		fmt.Print(st2)
@@ -55,6 +55,8 @@ func StringError(err error, optionalMsg ...string) error {
 		return nil
 	}
 
+	fmt.Printf("\nGot Error %+v\n", err)
+
 	concat := ""
 
 	for _, msgs := range optionalMsg {
@@ -65,10 +67,12 @@ func StringError(err error, optionalMsg ...string) error {
 	t := reflect.TypeOf(err)
 	_, ok := t.MethodByName("Wrap")
 	if !ok {
+		fmt.Printf("\nWrapping Mismatch Error %+v\n", err)
 		err = errors.New(err.Error())
 	}
 
 	if errors.Cause(err) == nil || errors.Cause(err) == err {
+		fmt.Printf("\nWrapping Nil or Top Level Error %+v\n", err)
 		return errors.Wrap(errors.New(err.Error()), concat)
 	}
 
