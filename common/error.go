@@ -3,7 +3,6 @@ package common
 import (
 	"fmt"
 	"os"
-	"reflect"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -55,21 +54,13 @@ func StringError(err error, optionalMsg ...string) error {
 		return nil
 	}
 
-	fmt.Printf("\nGot Error %+v\n", err)
-
 	concat := ""
 
 	for _, msgs := range optionalMsg {
 		concat += msgs + " "
 	}
 
-	// Fix type mismatch from external libraries
-	t := reflect.TypeOf(err)
-	_, ok := t.MethodByName("Wrap")
-	if !ok {
-		fmt.Printf("\nWrapping Mismatch Error %+v\n", err)
-		err = errors.Wrap(errors.New(err.Error()), concat)
-	} else if errors.Cause(err) == nil || errors.Cause(err) == err {
+	if errors.Cause(err) == nil || errors.Cause(err) == err {
 		fmt.Printf("\nWrapping Nil or Top Level Error %+v\n", err)
 		return errors.Wrap(errors.New(err.Error()), concat)
 	}
