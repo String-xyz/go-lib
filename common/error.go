@@ -68,10 +68,8 @@ func StringError(err error, optionalMsg ...string) error {
 	_, ok := t.MethodByName("Wrap")
 	if !ok {
 		fmt.Printf("\nWrapping Mismatch Error %+v\n", err)
-		err = errors.New(err.Error())
-	}
-
-	if errors.Cause(err) == nil || errors.Cause(err) == err {
+		err = errors.Wrap(errors.New(err.Error()), concat)
+	} else if errors.Cause(err) == nil || errors.Cause(err) == err {
 		fmt.Printf("\nWrapping Nil or Top Level Error %+v\n", err)
 		return errors.Wrap(errors.New(err.Error()), concat)
 	}
