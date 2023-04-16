@@ -61,7 +61,6 @@ func StringError(err error, optionalMsg ...string) error {
 	}
 
 	if errors.Cause(err) == nil || errors.Cause(err).Error() == err.Error() {
-		fmt.Printf("\nWrapping Nil or Top Level Error %+v\n", err)
 		return errors.Wrap(errors.New(err.Error()), concat)
 	}
 
