@@ -29,6 +29,8 @@ var INVALID_DATA = errors.New("invalid data")
 var DB_ERROR = errors.New("database error")
 var EXPIRED = errors.New("expired")
 var UNKNOWN_DEVICE = errors.New("unknown device")
+var FUNC_NOT_ALLOWED = errors.New("function is not allowed on this contract")
+var CONTRACT_NOT_ALLOWED = errors.New("contract not allowed by platform on network")
 
 /* Marlon's Proposal */
 
