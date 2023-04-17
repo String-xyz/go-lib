@@ -3,7 +3,6 @@ package common
 import (
 	"fmt"
 	"os"
-	"reflect"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -40,7 +39,7 @@ func LogStringError(c echo.Context, err error, handlerMsg string) {
 	}
 
 	if IsLocalEnv() {
-		st2 := fmt.Sprintf("\nSTACK TRACE:\n%+v: [%+v ]\n\n", cause.Error(), st[0:5])
+		st2 := fmt.Sprintf("\nSTACK TRACE:\n%+v: [%+v ]\n\n", cause.Error(), st)
 		// delete the string_api docker path from the stack trace
 		st2 = strings.ReplaceAll(st2, "/"+serviceName+"/", "")
 		fmt.Print(st2)
@@ -61,14 +60,7 @@ func StringError(err error, optionalMsg ...string) error {
 		concat += msgs + " "
 	}
 
-	// Fix type mismatch from external libraries
-	t := reflect.TypeOf(err)
-	_, ok := t.MethodByName("Wrap")
-	if !ok {
-		err = errors.New(err.Error())
-	}
-
-	if errors.Cause(err) == nil || errors.Cause(err) == err {
+	if errors.Cause(err) == nil || errors.Cause(err).Error() == err.Error() {
 		return errors.Wrap(errors.New(err.Error()), concat)
 	}
 
