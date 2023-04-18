@@ -2,6 +2,7 @@ package validator
 
 import (
 	"fmt"
+	netmail "net/mail"
 	"reflect"
 	"strings"
 
@@ -91,4 +92,9 @@ func IsUUID(id ...string) bool {
 	}
 
 	return true
+}
+
+func ValidEmail(email string) bool {
+	_, err := netmail.ParseAddress(email)
+	return err == nil
 }
