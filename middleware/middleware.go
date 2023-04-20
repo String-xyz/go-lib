@@ -1,17 +1,19 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 
 	"github.com/labstack/echo/v4"
 	echomiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
-	datadog "gopkg.in/DataDog/dd-trace-go.v1/contrib/labstack/echo.v4"
+	ddmiddleware "gopkg.in/DataDog/dd-trace-go.v1/contrib/labstack/echo.v4"
+	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
 
 func CORS() echo.MiddlewareFunc {
-	return echoMiddleware.CORSWithConfig(echoMiddleware.CORSConfig{
+	return echomiddleware.CORSWithConfig(echomiddleware.CORSConfig{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete, http.MethodPatch},
 		AllowCredentials: true, // allow cookie auth
@@ -19,7 +21,7 @@ func CORS() echo.MiddlewareFunc {
 }
 
 func Recover() echo.MiddlewareFunc {
-	return echoMiddleware.Recover()
+	return echomiddleware.Recover()
 }
 
 func Logger(logger *zerolog.Logger) echo.MiddlewareFunc {
@@ -32,7 +34,7 @@ func Logger(logger *zerolog.Logger) echo.MiddlewareFunc {
 }
 
 func LogRequest() echo.MiddlewareFunc {
-	return echoMiddleware.RequestLoggerWithConfig(echoMiddleware.RequestLoggerConfig{
+	return echomiddleware.RequestLoggerWithConfig(echomiddleware.RequestLoggerConfig{
 		LogURI:       true,
 		LogStatus:    true,
 		LogRequestID: true,
@@ -40,10 +42,11 @@ func LogRequest() echo.MiddlewareFunc {
 		LogMethod:    true,
 		LogHost:      true,
 		LogError:     true,
-		LogValuesFunc: func(c echo.Context, v echoMiddleware.RequestLoggerValues) error {
+		LogValuesFunc: func(c echo.Context, v echomiddleware.RequestLoggerValues) error {
 			env := os.Getenv("ENV")
 			logger := c.Get("logger").(*zerolog.Logger)
-			span, _ := c.Get("span").(echoDatadog.Span)
+			span, _ := c.Get("span").(tracer.Span)
+			fmt.Println(span)
 			logger.Info().
 				Str("path", v.URI).
 				Str("method", v.Method).
@@ -53,8 +56,7 @@ func LogRequest() echo.MiddlewareFunc {
 				Dur("latency", v.Latency).
 				Str("env", env).
 				Err(v.Error).
-				Msg("request").
-				Interface("span", span)
+				Msg("request")
 			return nil
 		},
 	})
@@ -66,5 +68,5 @@ func RequestId() echo.MiddlewareFunc {
 }
 
 func Tracer(service string) echo.MiddlewareFunc {
-	return datadog.Middleware(datadog.withServiceName(service))
+	return ddmiddleware.Middleware(ddmiddleware.WithServiceName(service))
 }
