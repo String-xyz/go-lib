@@ -43,6 +43,7 @@ func LogRequest() echo.MiddlewareFunc {
 		LogValuesFunc: func(c echo.Context, v echoMiddleware.RequestLoggerValues) error {
 			env := os.Getenv("ENV")
 			logger := c.Get("logger").(*zerolog.Logger)
+			span, _ := c.Get("span").(echoDatadog.Span)
 			logger.Info().
 				Str("path", v.URI).
 				Str("method", v.Method).
@@ -52,8 +53,8 @@ func LogRequest() echo.MiddlewareFunc {
 				Dur("latency", v.Latency).
 				Str("env", env).
 				Err(v.Error).
-				Msg("request")
-
+				Msg("request").
+				Interface("span", span)
 			return nil
 		},
 	})
