@@ -5,9 +5,9 @@ import (
 	"os"
 
 	"github.com/labstack/echo/v4"
-	echoMiddleware "github.com/labstack/echo/v4/middleware"
+	echomiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
-	echoDatadog "gopkg.in/DataDog/dd-trace-go.v1/contrib/labstack/echo.v4"
+	datadog "gopkg.in/DataDog/dd-trace-go.v1/contrib/labstack/echo.v4"
 )
 
 func CORS() echo.MiddlewareFunc {
@@ -62,9 +62,9 @@ func LogRequest() echo.MiddlewareFunc {
 
 // RequestID generates a unique request ID
 func RequestId() echo.MiddlewareFunc {
-	return echoMiddleware.RequestID()
+	return echomiddleware.RequestID()
 }
 
-func Tracer() echo.MiddlewareFunc {
-	return echoDatadog.Middleware()
+func Tracer(service string) echo.MiddlewareFunc {
+	return datadog.Middleware(datadog.withServiceName(service))
 }
