@@ -1,13 +1,13 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
 	"github.com/labstack/echo/v4"
 	echomiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	ddmiddleware "gopkg.in/DataDog/dd-trace-go.v1/contrib/labstack/echo.v4"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
@@ -46,8 +46,7 @@ func LogRequest() echo.MiddlewareFunc {
 			env := os.Getenv("ENV")
 			logger := c.Get("logger").(*zerolog.Logger)
 			span, _ := c.Get("span").(tracer.Span)
-
-			fmt.Println(span)
+			log.Info().Uint64("trace_id", span.Context().TraceID()).Msg("trace_id")
 			logger.Info().
 				Str("path", v.URI).
 				Str("method", v.Method).
@@ -57,8 +56,7 @@ func LogRequest() echo.MiddlewareFunc {
 				Dur("latency", v.Latency).
 				Str("env", env).
 				Err(v.Error).
-				Dict("dd", zerolog.Dict(zelog.String("trace_id", span.Context().TraceID().String()), zerolog.String("span_id", span.Context().SpanID().String()))).
-				Msg("request")
+				Send()
 			return nil
 		},
 	})
