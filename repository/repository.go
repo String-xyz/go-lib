@@ -134,3 +134,17 @@ func (b Base[T]) Select(ctx context.Context, model interface{}, query string, pa
 func (b Base[T]) Get(ctx context.Context, model interface{}, query string, params ...interface{}) error {
 	return b.Store.GetContext(ctx, model, query, params)
 }
+
+func (b Base[T]) Named(query string, arg interface{}) (string, []interface{}, error) {
+	q, a, err := sqlx.Named(query, arg)
+	if err != nil {
+		return q, a, err
+	}
+
+	q, a, err = sqlx.In(q, a)
+
+	if err != nil {
+		return q, a, err
+	}
+	return b.Store.Rebind(q), a, err
+}
