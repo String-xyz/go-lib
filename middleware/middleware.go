@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 
@@ -45,7 +46,8 @@ func LogRequest() echo.MiddlewareFunc {
 		LogValuesFunc: func(c echo.Context, v echomiddleware.RequestLoggerValues) error {
 			env := os.Getenv("ENV")
 			logger := c.Get("logger").(*zerolog.Logger)
-			span, _ := c.Get("span").(tracer.Span)
+			span, _ := tracer.SpanFromContext(c.Request().Context())
+			fmt.Println("logger", span)
 			log.Info().Uint64("trace_id", span.Context().TraceID()).Msg("trace_id")
 			logger.Info().
 				Str("path", v.URI).
