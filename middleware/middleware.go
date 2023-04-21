@@ -46,6 +46,7 @@ func LogRequest() echo.MiddlewareFunc {
 			env := os.Getenv("ENV")
 			logger := c.Get("logger").(*zerolog.Logger)
 			span, _ := c.Get("span").(tracer.Span)
+
 			fmt.Println(span)
 			logger.Info().
 				Str("path", v.URI).
@@ -56,6 +57,7 @@ func LogRequest() echo.MiddlewareFunc {
 				Dur("latency", v.Latency).
 				Str("env", env).
 				Err(v.Error).
+				Dict("dd", zerolog.Dict(zelog.String("trace_id", span.Context().TraceID().String()), zerolog.String("span_id", span.Context().SpanID().String()))).
 				Msg("request")
 			return nil
 		},
