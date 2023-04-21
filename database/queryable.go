@@ -31,7 +31,6 @@ type Queryable interface {
 	NamedExecContext(context.Context, string, interface{}) (sql.Result, error)
 	MustExec(string, ...interface{}) sql.Result
 	NamedQuery(string, interface{}) (*sqlx.Rows, error)
-	Named(query string, arg interface{}) (string, []interface{}, error)
 }
 
 type Readable interface {
