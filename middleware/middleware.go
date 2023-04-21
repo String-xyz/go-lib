@@ -1,14 +1,12 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
 	"github.com/labstack/echo/v4"
 	echomiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	ddmiddleware "gopkg.in/DataDog/dd-trace-go.v1/contrib/labstack/echo.v4"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
@@ -46,9 +44,10 @@ func LogRequest() echo.MiddlewareFunc {
 		LogValuesFunc: func(c echo.Context, v echomiddleware.RequestLoggerValues) error {
 			env := os.Getenv("ENV")
 			logger := c.Get("logger").(*zerolog.Logger)
-			span, _ := tracer.SpanFromContext(c.Request().Context())
-			fmt.Println("logger", span)
-			log.Info().Uint64("trace_id", span.Context().TraceID()).Msg("trace_id")
+			span, ok := tracer.SpanFromContext(c.Request().Context())
+			if !ok {
+				logger.Warn().Msg("no span found in context")
+			}
 			logger.Info().
 				Str("path", v.URI).
 				Str("method", v.Method).
@@ -56,9 +55,11 @@ func LogRequest() echo.MiddlewareFunc {
 				Str("request_id", v.RequestID).
 				Str("host", v.Host).
 				Dur("latency", v.Latency).
+				Uint64("dd.trace_id", span.Context().TraceID()).
+				Uint64("dd.span_id", span.Context().SpanID()).
 				Str("env", env).
 				Err(v.Error).
-				Send()
+				Msg("request")
 			return nil
 		},
 	})
