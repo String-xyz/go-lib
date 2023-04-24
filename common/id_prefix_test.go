@@ -46,3 +46,23 @@ func TestSanitizeRelationalModelOutput(t *testing.T) {
 	assert.Equal(t, "contact_123", m.ContactId)
 	assert.Equal(t, "platform_456", m.PlatformId)
 }
+
+func TestSanitizeInputInline(t *testing.T) {
+	m := "user_123"
+	m2 := "platform_456"
+
+	err := SanitizeIdInput(&struct{ UserId, PlatformId string }{m, m2}, &m, &m2)
+	assert.NoError(t, err)
+	assert.Equal(t, "123", m)
+	assert.Equal(t, "456", m2)
+}
+
+func TestSanitizeOutputInline(t *testing.T) {
+	m := "123"
+	m2 := "456"
+
+	err := SanitizeIdOutput(&struct{ UserId, PlatformId string }{m, m2}, &m, &m2)
+	assert.NoError(t, err)
+	assert.Equal(t, "user_123", m)
+	assert.Equal(t, "platform_456", m2)
+}
