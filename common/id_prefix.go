@@ -19,7 +19,7 @@ var modelIdPrefixes = map[string]string{
 	"TxLeg":          "txleg",
 	"Transaction":    "tx",
 	"AuthStrategy":   "auth",
-	"ApiKey":         "apikey",
+	"ApiKey":         "key",
 	"Contract":       "cx",
 	"MemberRole":     "mrole",
 	"MemberInvite":   "minv",
