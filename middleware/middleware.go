@@ -32,6 +32,11 @@ func Logger(logger *zerolog.Logger) echo.MiddlewareFunc {
 	}
 }
 
+// LogRequest is a middleware that logs the request and extracts the span Id and trace Id from the context
+// it give us the ability to trace and correlate the request in the logs as well as the starting
+// point of the root span, which is use to trace the request through the system
+// the span id and trace id are logged as dd.span_id and dd.trace_id for datadog to pick them up.
+// Keep in mind that the tracer middleware must be added before this middleware.
 func LogRequest() echo.MiddlewareFunc {
 	return echomiddleware.RequestLoggerWithConfig(echomiddleware.RequestLoggerConfig{
 		LogURI:       true,
@@ -44,6 +49,8 @@ func LogRequest() echo.MiddlewareFunc {
 		LogValuesFunc: func(c echo.Context, v echomiddleware.RequestLoggerValues) error {
 			env := os.Getenv("ENV")
 			logger := c.Get("logger").(*zerolog.Logger)
+			// we need the span to get the traceId and spanId
+			// and log them, datadog needs these two values to be logged to correlate the logs with the traces
 			span, ok := tracer.SpanFromContext(c.Request().Context())
 			if !ok {
 				logger.Warn().Msg("no span found in context")
@@ -70,6 +77,8 @@ func RequestId() echo.MiddlewareFunc {
 	return echomiddleware.RequestID()
 }
 
+// Tracer is a middleware that traces the request and adds the span to the context
+// for any other middleware to use it, or to extract the span later on.
 func Tracer(service string) echo.MiddlewareFunc {
 	return ddmiddleware.Middleware(ddmiddleware.WithServiceName(service))
 }
