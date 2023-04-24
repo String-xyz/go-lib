@@ -112,7 +112,7 @@ func SanitizeIdOutput(model interface{}, inline ...*string) error {
 		} else {
 			prefix, ok := modelIdPrefixes[stype.Type().Name()]
 			if !ok {
-				return StringError(errors.New("model unknown"))
+				return StringError(errors.New("model " + stype.Type().Name() + " unknown"))
 			}
 			field.SetString(prefix + "_" + field.String())
 		}
