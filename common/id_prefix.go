@@ -7,23 +7,24 @@ import (
 )
 
 var modelIdPrefixes = map[string]string{
-	"User":           "usr",
-	"Platform":       "plat",
-	"PlatformMember": "membr",
-	"Network":        "netw",
-	"Asset":          "asst",
-	"Device":         "devc",
-	"Contact":        "cont",
-	"Location":       "loc",
-	"Instrument":     "inst",
-	"TxLeg":          "txleg",
-	"Transaction":    "tx",
-	"AuthStrategy":   "auth",
-	"ApiKey":         "key",
-	"Contract":       "cx",
-	"MemberRole":     "mrole",
-	"MemberInvite":   "minv",
-	"NetworkData":    "ndata",
+	"User":             "usr",
+	"Platform":         "plat",
+	"PlatformMember":   "membr",
+	"Network":          "netw",
+	"Asset":            "asst",
+	"Device":           "devc",
+	"Contact":          "cont",
+	"Location":         "loc",
+	"Instrument":       "inst",
+	"TxLeg":            "txleg",
+	"Transaction":      "tx",
+	"AuthStrategy":     "auth",
+	"ApiKey":           "key",
+	"Contract":         "cx",
+	"MemberRole":       "mrole",
+	"MemberInvite":     "minv",
+	"NetworkData":      "ndata",
+	"MemberInviteData": "invdat",
 }
 
 var relationalIdPrefixes = map[string]string{
@@ -55,7 +56,7 @@ func SanitizeIdInput(model interface{}, inline ...*string) error {
 		} else {
 			prefix, ok := modelIdPrefixes[stype.Type().Name()]
 			if !ok {
-				return StringError(errors.New("model unknown"))
+				return StringError(errors.New("model " + stype.Type().Name() + " unknown"))
 			}
 			if field.String()[:len(prefix)+1] != prefix+"_" {
 				return StringError(errors.New("input missing prefix " + prefix + "_"))
