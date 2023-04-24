@@ -18,7 +18,7 @@ type ContactToPlatform struct {
 }
 
 func TestSanitizeModelInput(t *testing.T) {
-	m := User{Id: "user_0923840923840923840923"}
+	m := User{Id: "usr_0923840923840923840923"}
 	err := SanitizeIdInput(&m)
 	assert.NoError(t, err)
 	assert.Equal(t, "0923840923840923840923", m.Id)
@@ -28,11 +28,11 @@ func TestSanitizeModelOutput(t *testing.T) {
 	m := User{Id: "0923840923840923840923"}
 	err := SanitizeIdOutput(&m)
 	assert.NoError(t, err)
-	assert.Equal(t, "user_0923840923840923840923", m.Id)
+	assert.Equal(t, "usr_0923840923840923840923", m.Id)
 }
 
 func TestSanitizeRelationalModelInput(t *testing.T) {
-	m := ContactToPlatform{ContactId: "contact_123", PlatformId: "platform_456"}
+	m := ContactToPlatform{ContactId: "cont_123", PlatformId: "plat_456"}
 	err := SanitizeIdInput(&m)
 	assert.NoError(t, err)
 	assert.Equal(t, "123", m.ContactId)
@@ -43,13 +43,13 @@ func TestSanitizeRelationalModelOutput(t *testing.T) {
 	m := ContactToPlatform{ContactId: "123", PlatformId: "456"}
 	err := SanitizeIdOutput(&m)
 	assert.NoError(t, err)
-	assert.Equal(t, "contact_123", m.ContactId)
-	assert.Equal(t, "platform_456", m.PlatformId)
+	assert.Equal(t, "cont_123", m.ContactId)
+	assert.Equal(t, "plat_456", m.PlatformId)
 }
 
 func TestSanitizeInputInline(t *testing.T) {
-	m := "user_123"
-	m2 := "platform_456"
+	m := "usr_123"
+	m2 := "plat_456"
 
 	err := SanitizeIdInput(&struct{ UserId, PlatformId string }{m, m2}, &m, &m2)
 	assert.NoError(t, err)
@@ -63,6 +63,6 @@ func TestSanitizeOutputInline(t *testing.T) {
 
 	err := SanitizeIdOutput(&struct{ UserId, PlatformId string }{m, m2}, &m, &m2)
 	assert.NoError(t, err)
-	assert.Equal(t, "user_123", m)
-	assert.Equal(t, "platform_456", m2)
+	assert.Equal(t, "usr_123", m)
+	assert.Equal(t, "plat_456", m2)
 }
