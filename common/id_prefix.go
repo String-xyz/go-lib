@@ -7,24 +7,29 @@ import (
 )
 
 var modelIdPrefixes = map[string]string{
-	"User":         "user",
-	"Platform":     "platform",
-	"Network":      "network",
-	"Asset":        "asset",
-	"Device":       "device",
-	"Contact":      "contact",
-	"Location":     "location",
-	"Instrument":   "instrument",
-	"TxLeg":        "txleg",
-	"Transaction":  "tx",
-	"AuthStrategy": "auth",
-	"ApiKey":       "apikey",
-	"Contract":     "contract",
+	"User":           "user",
+	"Platform":       "platform",
+	"PlatformMember": "platformmember",
+	"Network":        "network",
+	"Asset":          "asset",
+	"Device":         "device",
+	"Contact":        "contact",
+	"Location":       "location",
+	"Instrument":     "instrument",
+	"TxLeg":          "txleg",
+	"Transaction":    "tx",
+	"AuthStrategy":   "auth",
+	"ApiKey":         "apikey",
+	"Contract":       "contract",
+	"MemberRole":     "memberrole",
+	"MemberInvite":   "memberinvite",
+	"NetworkData":    "networkdata",
 }
 
 var relationalIdPrefixes = map[string]string{
 	"UserId":             "user",
 	"PlatformId":         "platform",
+	"MemberId":           "member",
 	"ContactId":          "contact",
 	"DeviceId":           "device",
 	"InstrumentId":       "instrument",
@@ -34,6 +39,7 @@ var relationalIdPrefixes = map[string]string{
 	"ReceiptTxId":        "txleg",
 	"ResponseTxId":       "txleg",
 	"AssetId":            "asset",
+	"RoleId":             "role",
 }
 
 func SanitizeIdInput(model interface{}, inline ...*string) error {
