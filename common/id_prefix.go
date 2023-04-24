@@ -41,6 +41,7 @@ var relationalIdPrefixes = map[string]string{
 	"ResponseTxId":       "txleg",
 	"AssetId":            "asst",
 	"RoleId":             "mrole",
+	"MemberInviteId":     "iinfo", // Mismatch in API
 }
 
 func SanitizeIdInput(model interface{}, inline ...*string) error {
