@@ -24,7 +24,7 @@ var modelIdPrefixes = map[string]string{
 	"MemberRole":       "mrole",
 	"MemberInvite":     "minv",
 	"NetworkData":      "ndata",
-	"MemberInviteData": "invdat",
+	"MemberInviteInfo": "iinfo",
 }
 
 var relationalIdPrefixes = map[string]string{
