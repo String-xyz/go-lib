@@ -134,3 +134,7 @@ func (b Base[T]) Select(ctx context.Context, model interface{}, query string, pa
 func (b Base[T]) Get(ctx context.Context, model interface{}, query string, params ...interface{}) error {
 	return b.Store.GetContext(ctx, model, query, params)
 }
+
+func (b Base[T]) Named(query string, arg interface{}) (string, []interface{}, error) {
+	return sqlx.BindNamed(sqlx.DOLLAR, query, arg)
+}
