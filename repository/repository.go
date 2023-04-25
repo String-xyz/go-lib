@@ -69,7 +69,7 @@ func (b Base[T]) List(ctx context.Context, limit int, offset int) (list []T, err
 }
 
 func (b Base[T]) GetById(ctx context.Context, id string) (m T, err error) {
-	err = b.Store.GetContext(ctx, &m, fmt.Sprintf("SELECT * FROM %s WHERE id = $1 AND deactivated_at IS NULL", b.Table), id)
+	err = b.Store.GetContext(ctx, &m, fmt.Sprintf("SELECT * FROM %s WHERE id = $1 AND deleted_at IS NULL", b.Table), id)
 	if err != nil && err == sql.ErrNoRows {
 		return m, serror.NOT_FOUND
 	}
@@ -78,7 +78,7 @@ func (b Base[T]) GetById(ctx context.Context, id string) (m T, err error) {
 
 // Returns the first match of the user's ID
 func (b Base[T]) GetByUserId(ctx context.Context, userId string) (m T, err error) {
-	err = b.Store.GetContext(ctx, &m, fmt.Sprintf("SELECT * FROM %s WHERE user_id = $1 AND deactivated_at IS NULL LIMIT 1", b.Table), userId)
+	err = b.Store.GetContext(ctx, &m, fmt.Sprintf("SELECT * FROM %s WHERE user_id = $1 AND deleted_at IS NULL LIMIT 1", b.Table), userId)
 	if err != nil && err == sql.ErrNoRows {
 		return m, serror.NOT_FOUND
 	}
