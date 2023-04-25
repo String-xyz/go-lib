@@ -138,3 +138,19 @@ func (b Base[T]) Get(ctx context.Context, model interface{}, query string, param
 func (b Base[T]) Named(query string, arg interface{}) (string, []interface{}, error) {
 	return sqlx.BindNamed(sqlx.DOLLAR, query, arg)
 }
+
+func (b Base[T]) SoftDelete(ctx context.Context, id string) error {
+	now := time.Now()
+	query := fmt.Sprintf("UPDATE %s SET deleted_at = :time WHERE id = :id", b.Table)
+	_, err := b.Store.NamedExecContext(ctx, query, map[string]interface{}{"id": id, "time": now})
+	return err
+}
+
+func (b Base[T]) IsDeleted(ctx context.Context, id string) (bool, error) {
+	var count int
+	err := b.Store.GetContext(ctx, &count, fmt.Sprintf("SELECT count(*) FROM %s WHERE id = $1 AND deleted_at IS NOT NULL", b.Table), id)
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
+}
