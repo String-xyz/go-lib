@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/String-xyz/go-lib/common"
-	serror "github.com/String-xyz/go-lib/stringerror"
+	"github.com/String-xyz/go-lib/v2/common"
+	serror "github.com/String-xyz/go-lib/v2/stringerror"
 
 	"github.com/go-redis/redis/v8"
 )

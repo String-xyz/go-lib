@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/String-xyz/go-lib/validator"
+	"github.com/String-xyz/go-lib/v2/validator"
 	"github.com/labstack/echo/v4"
 )
 
