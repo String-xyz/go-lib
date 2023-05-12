@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	serror "github.com/String-xyz/go-lib/stringerror"
+	serror "github.com/String-xyz/go-lib/v2/stringerror"
 
-	"github.com/String-xyz/go-lib/common"
-	"github.com/String-xyz/go-lib/database"
+	"github.com/String-xyz/go-lib/v2/common"
+	"github.com/String-xyz/go-lib/v2/database"
 	"github.com/jmoiron/sqlx"
 )
 
