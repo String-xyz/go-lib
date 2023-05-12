@@ -1,4 +1,4 @@
-module github.com/String-xyz/go-lib
+module github.com/String-xyz/go-lib/v2
 
 go 1.19
 
