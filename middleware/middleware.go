@@ -55,7 +55,14 @@ func LogRequest() echo.MiddlewareFunc {
 			if !ok {
 				logger.Warn().Msg("no span found in context")
 			}
-			logger.Info().
+			var logEnvent *zerolog.Event
+			if v.Error != nil {
+				logEnvent = logger.Error().Err(v.Error)
+			} else {
+				logEnvent = logger.Info()
+			}
+
+			logEnvent.
 				Str("path", v.URI).
 				Str("method", v.Method).
 				Int("status_code", v.Status).
@@ -65,7 +72,6 @@ func LogRequest() echo.MiddlewareFunc {
 				Uint64("dd.trace_id", span.Context().TraceID()).
 				Uint64("dd.span_id", span.Context().SpanID()).
 				Str("env", env).
-				Err(v.Error).
 				Msg("request")
 			return nil
 		},
