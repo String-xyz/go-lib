@@ -14,23 +14,24 @@ type Queryable interface {
 	sqlx.QueryerContext
 	sqlx.Preparer
 
-	GetContext(context.Context, interface{}, string, ...interface{}) error
-	SelectContext(context.Context, interface{}, string, ...interface{}) error
 	Get(interface{}, string, ...interface{}) error
+	GetContext(context.Context, interface{}, string, ...interface{}) error
+	Select(interface{}, string, ...interface{}) error
+	SelectContext(context.Context, interface{}, string, ...interface{}) error
 	MustExecContext(context.Context, string, ...interface{}) sql.Result
+	MustExec(string, ...interface{}) sql.Result
 	PreparexContext(context.Context, string) (*sqlx.Stmt, error)
 	QueryRowContext(context.Context, string, ...interface{}) *sql.Row
-	Select(interface{}, string, ...interface{}) error
 	QueryxContext(context.Context, string, ...interface{}) (*sqlx.Rows, error)
 	QueryRow(string, ...interface{}) *sql.Row
 	QueryRowxContext(context.Context, string, ...interface{}) *sqlx.Row
-	PrepareNamedContext(context.Context, string) (*sqlx.NamedStmt, error)
 	PrepareNamed(string) (*sqlx.NamedStmt, error)
+	PrepareNamedContext(context.Context, string) (*sqlx.NamedStmt, error)
 	Preparex(string) (*sqlx.Stmt, error)
 	NamedExec(string, interface{}) (sql.Result, error)
 	NamedExecContext(context.Context, string, interface{}) (sql.Result, error)
-	MustExec(string, ...interface{}) sql.Result
 	NamedQuery(string, interface{}) (*sqlx.Rows, error)
+	NamedQueryContext(context.Context, string, interface{}) (*sqlx.Rows, error)
 }
 
 type Readable interface {
