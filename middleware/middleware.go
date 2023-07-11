@@ -55,14 +55,14 @@ func LogRequest() echo.MiddlewareFunc {
 			if !ok {
 				logger.Warn().Msg("no span found in context")
 			}
-			var logEnvent *zerolog.Event
+			var logEvent *zerolog.Event
 			if v.Error != nil {
-				logEnvent = logger.Error().Err(v.Error)
+				logEvent = logger.Error().Err(v.Error)
 			} else {
-				logEnvent = logger.Info()
+				logEvent = logger.Info()
 			}
 
-			logEnvent.
+			logEvent.
 				Str("path", v.URI).
 				Str("method", v.Method).
 				Int("status_code", v.Status).
