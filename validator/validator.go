@@ -86,11 +86,22 @@ func IsUUID(id ...string) bool {
 	validate := validator.New()
 
 	for _, i := range id {
-		if err := validate.Var(i, "uuid"); err != nil {
+		if err := validate.Var(i, "uuid4"); err != nil {
 			return false
 		}
 	}
 
+	return true
+}
+
+// https://github.com/go-playground/validator#baked-in-validations
+func Is(tag string, values ...string) bool {
+	v := validator.New()
+	for _, q := range values {
+		if err := v.Var(q, tag); err != nil {
+			return false
+		}
+	}
 	return true
 }
 
