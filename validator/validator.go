@@ -17,6 +17,7 @@ var tagsMessage = map[string]string{
 	"numeric":  "must be a valid numeric value",
 }
 
+// swagger:model InvalidParamError
 type InvalidParamError struct {
 	Param        string `json:"param"`
 	Value        any    `json:"value"`
@@ -24,6 +25,7 @@ type InvalidParamError struct {
 	Message      string `json:"message"`
 }
 
+// swagger:model InvalidParams
 type InvalidParams []InvalidParamError
 
 type Validator struct {

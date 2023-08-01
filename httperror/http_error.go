@@ -8,12 +8,14 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// swagger:model JSONError
 type JSONError struct {
 	Code    string   `json:"code"`
 	Message string   `json:"message"`
 	Details *Details `json:"details,omitempty"`
 }
 
+// swagger:model JSONErrorDetails
 type Details struct {
 	Params *validator.InvalidParams `json:"invalidParams,omitempty"`
 }
